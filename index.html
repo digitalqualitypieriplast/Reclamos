@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Reclamos AMFORA PACKAGING</title>
+    <style>
+        /* Estilos iniciales */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4; /* Fondo gris claro */
+        }
+        .platform-title {
+            background-color: #003366; /* Azul oscuro */
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .container {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #003366; /* Azul oscuro */
+            padding: 20px;
+            color: white;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin-bottom: 5px;
+            background-color: #00509e; /* Azul más claro */
+            border-radius: 5px;
+        }
+        .sidebar a:hover {
+            background-color: #003366; /* Azul oscuro al hacer hover */
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #ffffff; /* Fondo blanco */
+        }
+        .complaint-form,
+        .search-section,
+        .actions-section,
+        .inicio-section,
+        .status-section,
+        .indicadores-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border: 1px solid #dcdcdc; /* Borde gris claro */
+        }
+        .form-grid,
+        .search-filters,
+        .actions-filters {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #333333; /* Texto gris oscuro */
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 6px;
+            border: 1px solid #dcdcdc; /* Borde gris claro */
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .full-width {
+            grid-column: span 2;
+        }
+        .submit-btn,
+        .search-btn,
+        .actions-btn,
+        .inicio-btn {
+            background-color: #003366; /* Azul oscuro */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .submit-btn:hover,
+        .search-btn:hover,
+        .actions-btn:hover,
+        .inicio-btn:hover {
+            background-color: #00509e; /* Azul más claro al hacer hover */
+        }
+        .results-table,
+        .actions-table,
+        .evaluation-table,
+        .status-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .results-table th,
+        .results-table td,
+        .actions-table th,
+        .actions-table td,
+        .evaluation-table th,
+        .evaluation-table td,
+        .status-table th,
+        .status-table td {
+            border: 1px solid #dcdcdc; /* Borde gris claro */
+            padding: 10px;
+            text-align: left;
+        }
+        .results-table th,
+        .actions-table th,
+        .evaluation-table th,
+        .status-table th {
+            background-color: #003366; /* Azul oscuro */
+            color: white;
+        }
+        .results-table tr:nth-child(even),
+        .actions-table tr:nth-child(even),
+        .evaluation-table tr:nth-child(even),
+        .status-table tr:nth-child(even) {
+            background-color: #f4f4f4; /* Fondo gris claro */
+        }
+        .results-table tr:hover,
+        .actions-table tr:hover,
+        .evaluation-table tr:hover,
+        .status-table tr:hover {
+            background-color: #e0e0e0; /* Fondo gris más oscuro al hacer hover */
+        }
+        .five-whys {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .why-section {
+            display: flex;
+            flex-direction: column;
+        }
+        .why-section label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #333333; /* Texto gris oscuro */
+        }
+        .why-section input,
+        .why-section textarea {
+            padding: 6px;
+            border: 1px solid #dcdcdc; /* Borde gris claro */
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        /* Estilos para la sección de Inicio */
+        .inicio-section {
+            text-align: center;
+        }
+        .inicio-section h1 {
+            font-size: 2em;
+            color: #003366; /* Azul oscuro */
+            margin-bottom: 20px;
+        }
+        .inicio-section h2 {
+            font-size: 1.5em;
+            color: #333333; /* Texto gris oscuro */
+            margin-bottom: 10px;
+        }
+        .inicio-section .options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .inicio-section .option {
+            background-color: #003366; /* Azul oscuro */
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 200px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            flex-direction: column;
+        }
+        .inicio-section .option img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+        .inicio-section .option:hover {
+            background-color: #00509e; /* Azul más claro al hacer hover */
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Notificaciones */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            display: none;
+            z-index: 1000;
+        }
+
+        /* Estilos para la barra de progreso */
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-bar div {
+            height: 10px;
+            background-color: #003366; /* Azul oscuro */
+            border-radius: 5px;
+        }
+
+        /* Estilos para la sección de Indicadores */
+        .indicadores-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border: 1px solid #dcdcdc; /* Borde gris claro */
+        }
+        .power-bi-embed {
+            margin-top: 20px;
+            border: 1px solid #dcdcdc; /* Borde gris claro */
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .power-bi-embed iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="platform-title">PLATAFORMA DE RECLAMOS AMFORA PACKAGING</div>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Reclamos / Complaints</h2>
+            <a href="#" id="inicio">Inicio / Home</a>
+            <a href="#" id="crear-reclamo">Crear Reclamo / Create Complaint</a>
+            <a href="#" id="mis-reclamos">Mis Reclamos / My Complaints</a>
+            <a href="#" id="acciones">Acciones / Actions</a>
+            <a href="#" id="estatus-reclamos">Estatus de Reclamos / Complaint Status</a>
+            <a href="#" id="indicadores">Indicadores / Metrics</a>
+        </div>
+        <div class="main-content" id="main-content">
+            <!-- Sección de Inicio -->
+            <div id="inicio-section" class="fade-in" style="display:block;">
+                <div class="inicio-section">
+                    <h1>BIENVENIDO A LA PLATAFORMA DE RECLAMOS AMFORA PACKAGING - PIERIPLAST PERÚ</h1>
+                    <h2>Si usted es cliente, haga clic aquí:</h2>
+                    <div class="options">
+                        <div class="option" onclick="showClientOptions()">
+                            <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Cliente">
+                            Cliente
+                        </div>
+                    </div>
+                    <h2>Si usted es personal de la empresa, haga clic aquí:</h2>
+                    <div class="options">
+                        <div class="option" onclick="showEmployeeOptions()">
+                            <img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" alt="Personal">
+                            Personal
+                        </div>
+                    </div>
+
+                    <!-- Opciones para Clientes -->
+                    <div id="client-options" style="display:none;">
+                        <h2>Opciones para Clientes:</h2>
+                        <div class="options">
+                            <div class="option" onclick="navigateTo('crear-reclamo-form')">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Crear Reclamo">
+                                Ingresar o Crear un Reclamo Nuevo
+                            </div>
+                            <div class="option" onclick="navigateTo('mis-reclamos-section')">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Revisar Reclamos">
+                                Revisar los Reclamos de su Empresa
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Opciones para Personal de la Empresa -->
+                    <div id="employee-options" style="display:none;">
+                        <h2>Opciones para Personal:</h2>
+                        <div class="options">
+                            <div class="option" onclick="navigateTo('mis-reclamos-section')">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" alt="Revisar Reclamos">
+                                Revisar sus Reclamos Asignados
+                            </div>
+                            <div class="option" onclick="navigateTo('acciones-section')">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" alt="Ingresar Acciones">
+                                Ingresar Acciones
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Crear Reclamo -->
+            <div id="crear-reclamo-form" style="display:none;">
+                <div class="complaint-form">
+                    <form id="complaint-form" enctype="multipart/form-data">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Cliente / Client</label>
+                                <select name="cliente" required>
+                                    <option value="">Seleccionar / Select</option>
+                                    <option value="Belcorp">BELCORP</option>
+                                    <option value="Yanbal-Unique">YANBAL</option>
+                                    <option value="Tricrobraun">TRICROBRAUN</option>
+                                    <option value="Victorias-Secret">VICTORIA'S SECRETS</option>
+                                    <option value="Mary-Kay">MARY KAY</option>
+                                    <option value="otros">OTROS / OTHERS</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Producto / Product</label>
+                                <input type="text" name="producto" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo de Defecto / Defect Type</label>
+                                <select name="tipoDefecto" required>
+                                    <option value="">Seleccionar / Select</option>
+                                    <option value="Funcional">FUNCIONAL / FUNCTIONAL</option>
+                                    <option value="Dimensional">DIMENSIONAL</option>
+                                    <option value="Aspecto">ASPECTO / ASPECT</option>
+                                    <option value="Inocuidad">INOCUIDAD / SAFETY</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Orden de Compra / Purchase Order</label>
+                                <input type="text" name="ordenCompra" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Lote / Lot</label>
+                                <input type="text" name="lote" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Cantidad Recibida / Quantity Received</label>
+                                <input type="number" name="cantidadRecibida" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Cantidad Observada / Observed Quantity</label>
+                                <input type="number" name="cantidadObservada" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Código de Producto / Product Code</label>
+                                <input type="text" name="codigoProducto" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Fecha / Date</label>
+                                <input type="date" name="fecha" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Área Impactada / Impacted Area</label>
+                                <input type="text" name="areaImpactada" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Área donde se Detectó / Detection Area</label>
+                                <input type="text" name="areaDeteccion" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Reportado por / Reported By</label>
+                                <input type="text" name="reportadoPor" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Representante de Calidad / Quality Representative</label>
+                                <input type="text" name="representanteCalidad" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Descripción del Defecto / Defect Description</label>
+                                <textarea name="descripcionDefecto" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Documento Adjunto / Attached Document</label>
+                                 <input type="file" name="documentoAdjunto" accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">Enviar Reclamo / Submit Complaint</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sección de Mis Reclamos -->
+            <div id="mis-reclamos-section" style="display:none;">
+                <div class="search-section">
+                    <h2>Buscar Reclamos / Search Complaints</h2>
+                    <div class="search-filters">
+                        <div class="form-group">
+                            <label>Cliente / Client</label>
+                            <select id="search-client">
+                                <option value="">Todos / All</option>
+                                <option value="Belcorp">BELCORP</option>
+                                <option value="Yanbal-Unique">YANBAL</option>
+                                <option value="Tricrobraun">TRICROBRAUN</option>
+                                <option value="Victorias-Secret">VICTORIA'S SECRETS</option>
+                                <option value="Mary-Kay">MARY KAY</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Producto / Product</label>
+                            <input type="text" id="search-product" placeholder="Ingrese el producto">
+                        </div>
+                        <div class="form-group">
+                            <label>Código de Producto / Product Code</label>
+                            <input type="text" id="search-code">
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha / Date</label>
+                            <input type="date" id="search-date">
+                        </div>
+                    </div>
+                    <button class="search-btn" onclick="searchComplaints()">Buscar / Search</button>
+
+                    <table class="results-table" id="results-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha / Date</th>
+                                <th>Cliente / Client</th>
+                                <th>Producto / Product</th>
+                                <th>Código / Code</th>
+                                <th>Tipo de Defecto / Defect Type</th>
+                                <th>Estado / Status</th>
+                                <th>Acciones / Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-body">
+                            <!-- Ejemplo de fila -->
+                            <tr>
+                                <td>2023-10-01</td>
+                                <td>BELCORP</td>
+                                <td>Envase de plástico</td>
+                                <td>ABC123</td>
+                                <td>Funcional</td>
+                                <td>En Progreso</td>
+                                <td>
+                                    <button>Ver Detalles</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sección de Acciones -->
+            <div id="acciones-section" style="display:none;">
+                <div class="complaint-form">
+                    <h2>Acciones / Actions</h2>
+                    
+                    <!-- Zona de Búsqueda -->
+                    <div class="search-filters">
+                        <div class="form-group">
+                            <label>Buscar por Código de Reclamo / Search by Complaint Code:</label>
+                            <input type="text" id="search-complaint-code" placeholder="Ingrese el código del reclamo">
+                        </div>
+                        <button class="search-btn" onclick="searchActions()">Buscar / Search</button>
+                    </div>
+
+                    <!-- Formulario de Acciones (Dinámico) -->
+                    <div id="actions-form" style="display:none;">
+                        <h3>Análisis de Causa Raíz / Root Cause Analysis</h3>
+
+                        <!-- Campo para el Código de Reclamo -->
+                        <div class="form-group">
+                            <label>Código de Reclamo / Complaint Code:</label>
+                            <input type="text" id="complaint-code" readonly>
+                        </div>
+
+                        <!-- Información Preliminar -->
+                        <div class="form-group full-width">
+                            <label>Problema / Problem:</label>
+                            <textarea id="problem-description" rows="3" placeholder="Describe el problema a analizar. Se puede añadir foto o imagen del problema detectado"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Línea / Área:</label>
+                            <input type="text" id="line-area" placeholder="Ingrese la línea o área">
+                        </div>
+                        <div class="form-group">
+                            <label>Máquina:</label>
+                            <input type="text" id="machine" placeholder="Ingrese la máquina">
+                        </div>
+                        <div class="form-group">
+                            <label>Investigador / Investigator:</label>
+                            <input type="text" id="investigator" placeholder="Nombre del investigador">
+                        </div>
+                        <div class="form-group">
+                            <label>Miembros del Equipo / Team Members:</label>
+                            <input type="text" id="team-members" placeholder="Nombres de los miembros del equipo">
+                        </div>
+
+                        <!-- 5 Porqués -->
+                        <h3>Análisis de 5 Porqués / 5 Whys Analysis</h3>
+                        <div class="five-whys">
+                            <div class="why-section">
+                                <label>1° ¿Por qué? / 1st Why:</label>
+                                <input type="text" id="why-1" placeholder="Ingrese la primera causa">
+                            </div>
+                            <div class="why-section">
+                                <label>2° ¿Por qué? / 2nd Why:</label>
+                                <input type="text" id="why-2" placeholder="Ingrese la segunda causa">
+                            </div>
+                            <div class="why-section">
+                                <label>3° ¿Por qué? / 3rd Why:</label>
+                                <input type="text" id="why-3" placeholder="Ingrese la tercera causa">
+                            </div>
+                            <div class="why-section">
+                                <label>4° ¿Por qué? / 4th Why:</label>
+                                <input type="text" id="why-4" placeholder="Ingrese la cuarta causa">
+                            </div>
+                            <div class="why-section">
+                                <label>5° ¿Por qué? / 5th Why:</label>
+                                <input type="text" id="why-5" placeholder="Ingrese la quinta causa">
+                            </div>
+                        </div>
+
+                        <!-- Causa Raíz -->
+                        <div class="form-group full-width">
+                            <label>Causa Raíz / Root Cause:</label>
+                            <textarea id="root-cause" rows="3" placeholder="Describa la causa raíz identificada"></textarea>
+                        </div>
+
+                        <!-- Planes de Acción -->
+                        <h3>Planes de Acción / Action Plans</h3>
+                        <table class="evaluation-table">
+                            <thead>
+                                <tr>
+                                    <th>Causa Raíz / Root Cause</th>
+                                    <th>Plan de Acción / Action Plan</th>
+                                    <th>Responsable / Responsible</th>
+                                    <th>Fecha Plan / Plan Date</th>
+                                    <th>Fecha Cierre / Closing Date</th>
+                                    <th>AI</th>
+                                    <th>AC</th>
+                                    <th>AP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" id="root-cause-1" placeholder="Causa 1"></td>
+                                    <td><input type="text" id="action-plan-1" placeholder="Acción 1"></td>
+                                    <td><input type="text" id="responsible-1" placeholder="Responsable 1"></td>
+                                    <td><input type="date" id="plan-date-1"></td>
+                                    <td><input type="date" id="closing-date-1"></td>
+                                    <td><input type="checkbox" id="ai-1"></td>
+                                    <td><input type="checkbox" id="ac-1"></td>
+                                    <td><input type="checkbox" id="ap-1"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" id="root-cause-2" placeholder="Causa 2"></td>
+                                    <td><input type="text" id="action-plan-2" placeholder="Acción 2"></td>
+                                    <td><input type="text" id="responsible-2" placeholder="Responsable 2"></td>
+                                    <td><input type="date" id="plan-date-2"></td>
+                                    <td><input type="date" id="closing-date-2"></td>
+                                    <td><input type="checkbox" id="ai-2"></td>
+                                    <td><input type="checkbox" id="ac-2"></td>
+                                    <td><input type="checkbox" id="ap-2"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Botón de Guardar -->
+                        <button type="submit" class="submit-btn" onclick="saveActions()">Guardar Acciones / Save Actions</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Estatus de Reclamos -->
+            <div id="estatus-reclamos-section" style="display:none;">
+                <div class="status-section">
+                    <h2>Estatus de Reclamos / Complaint Status</h2>
+                    <div class="search-filters">
+                        <div class="form-group">
+                            <label>Buscar por Cliente / Search by Client:</label>
+                            <select id="status-client">
+                                <option value="">Todos / All</option>
+                                <option value="belcorp">BELCORP</option>
+                                <option value="yanbal">YANBAL</option>
+                                <option value="unique">UNIQUE</option>
+                                <option value="victorias-secret">VICTORIA'S SECRETS</option>
+                                <option value="mary-kay">MARY KAY</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Buscar por Producto / Search by Product:</label>
+                            <input type="text" id="status-product" placeholder="Ingrese el producto">
+                        </div>
+                        <div class="form-group">
+                            <label>Buscar por Código / Search by Code:</label>
+                            <input type="text" id="status-code" placeholder="Ingrese el código">
+                        </div>
+                        <button class="search-btn" onclick="searchStatus()">Buscar / Search</button>
+                    </div>
+
+                    <!-- Tabla de Estatus -->
+                    <table class="status-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha / Date</th>
+                                <th>Cliente / Client</th>
+                                <th>Producto / Product</th>
+                                <th>Código / Code</th>
+                                <th>Estado / Status</th>
+                                <th>Acciones / Actions</th>
+                                <th>Progreso / Progress</th>
+                            </tr>
+                        </thead>
+                        <tbody id="status-body">
+                            <!-- Ejemplo de fila -->
+                            <tr>
+                                <td>2023-10-01</td>
+                                <td>BELCORP</td>
+                                <td>Envase de plástico</td>
+                                <td>ABC123</td>
+                                <td>En Progreso</td>
+                                <td>2/5</td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div style="width: 40%;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sección de Indicadores -->
+            <div id="indicadores-section" style="display:none;">
+                <div class="indicadores-section">
+                    <h2>Indicadores / Metrics</h2>
+                    <div class="power-bi-embed">
+                        <!-- Iframe para incrustar el informe de Power BI -->
+                        <iframe
+                            width="100%"
+                            height="600px"
+                            src="https://app.powerbi.com/reportEmbed?reportId=TU_REPORT_ID&groupId=TU_GROUP_ID"
+                            frameborder="0"
+                            allowFullScreen="true">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificación -->
+    <div id="notification" class="notification">¡Operación exitosa!</div>
+
+    <script>
+        // Funcionalidad de navegación
+        document.getElementById('inicio').addEventListener('click', function(e) {
+            e.preventDefault();
+            hideAllSections();
+            document.getElementById('inicio-section').style.display = 'block';
+        });
+
+        document.getElementById('crear-reclamo').addEventListener('click', function(e) {
+            e.preventDefault();
+            hideAllSections();
+            document.getElementById('crear-reclamo-form').style.display = 'block';
+        });
+
+
+
+document.getElementById('complaint-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Crear un FormData con el formulario
+    let formData = new FormData(e.target);
+    
+    // Verificar si hay un archivo y registrarlo para depuración
+    const fileInput = document.querySelector('input[type="file"]');
+    if (fileInput && fileInput.files.length > 0) {
+        console.log("Archivo seleccionado:", fileInput.files[0].name);
+        
+        // Asegurarse de que el archivo se incluya en el FormData con el nombre correcto
+        formData.delete('archivo'); // Eliminar entrada anterior si existe
+        formData.append('archivo', fileInput.files[0]);
+    } else {
+        console.log("No se seleccionó ningún archivo");
+    }
+    
+    console.log("Enviando datos...");
+    
+    fetch("https://script.google.com/macros/s/AKfycbya0ywSCyuXsSNLXGfJK5_irqIsk7w_SMYt_kkAK8d-i3eJx8vvVII8J9pw31e7RwXA/exec", {
+        method: "POST",
+        body: formData,
+        // No incluir Content-Type aquí, deja que el navegador lo establezca con el boundary correcto
+    })
+    .then(response => response.json())
+    .then(responseData => {
+        console.log("Respuesta recibida:", responseData);
+        if (responseData.status === "success") {
+            alert("✅ Reclamo guardado con éxito. Código: " + responseData.codigoReclamo);
+        } else {
+            alert("⚠️ Hubo un error: " + responseData.message);
+        }
+    })
+    .catch(error => {
+        console.error("❌ Error:", error);
+        alert("❌ Error al enviar el reclamo: " + error.message);
+    });
+});
+
+
+
+        document.getElementById('mis-reclamos').addEventListener('click', function(e) {
+            e.preventDefault();
+            hideAllSections();
+            document.getElementById('mis-reclamos-section').style.display = 'block';
+        });
+
+        document.getElementById('acciones').addEventListener('click', function(e) {
+            e.preventDefault();
+            hideAllSections();
+            document.getElementById('acciones-section').style.display = 'block';
+        });
+
+        document.getElementById('estatus-reclamos').addEventListener('click', function(e) {
+            e.preventDefault();
+            hideAllSections();
+            document.getElementById('estatus-reclamos-section').style.display = 'block';
+        });
+
+        document.getElementById('indicadores').addEventListener('click', function(e) {
+            e.preventDefault();
+            hideAllSections();
+            document.getElementById('indicadores-section').style.display = 'block';
+        });
+
+        // Funcionalidad para mostrar opciones de clientes
+        function showClientOptions() {
+            document.getElementById('client-options').style.display = 'block';
+            document.getElementById('employee-options').style.display = 'none';
+        }
+
+        // Funcionalidad para mostrar opciones de personal
+        function showEmployeeOptions() {
+            document.getElementById('employee-options').style.display = 'block';
+            document.getElementById('client-options').style.display = 'none';
+        }
+
+        // Función para navegar a una sección específica
+        function navigateTo(sectionId) {
+            hideAllSections();
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        // Función para ocultar todas las secciones
+        function hideAllSections() {
+            document.getElementById('inicio-section').style.display = 'none';
+            document.getElementById('crear-reclamo-form').style.display = 'none';
+            document.getElementById('mis-reclamos-section').style.display = 'none';
+            document.getElementById('acciones-section').style.display = 'none';
+            document.getElementById('estatus-reclamos-section').style.display = 'none';
+            document.getElementById('indicadores-section').style.display = 'none';
+        }
+
+        // Función para buscar reclamos (ejemplo)
+        function searchComplaints() {
+            const client = document.getElementById('search-client').value;
+            const product = document.getElementById('search-product').value;
+            const code = document.getElementById('search-code').value;
+            const date = document.getElementById('search-date').value;
+            alert(`Buscando: Cliente - ${client}, Producto - ${product}, Código - ${code}, Fecha - ${date}`);
+        }
+
+        // Función para buscar en la sección de estatus
+        function searchStatus() {
+            const client = document.getElementById('status-client').value;
+            const product = document.getElementById('status-product').value;
+            const code = document.getElementById('status-code').value;
+            alert(`Buscando: Cliente - ${client}, Producto - ${product}, Código - ${code}`);
+        }
+
+        // Función para buscar acciones por código de reclamo
+        function searchActions() {
+            const complaintCode = document.getElementById('search-complaint-code').value;
+            if (complaintCode) {
+                // Simulación de búsqueda de acciones
+                const actionsData = {
+                    complaintCode: complaintCode,
+                    problemDescription: "Problema con el envase de plástico",
+                    lineArea: "Línea 1",
+                    machine: "Máquina 5",
+                    investigator: "Juan Pérez",
+                    teamMembers: "Ana Gómez, Luis Martínez",
+                    why1: "Falta de inspección",
+                    why2: "Falta de capacitación",
+                    why3: "Falta de supervisión",
+                    why4: "Falta de recursos",
+                    why5: "Falta de planificación",
+                    rootCause: "Falta de supervisión y recursos",
+                    actionPlans: [
+                        {
+                            rootCause: "Falta de supervisión",
+                            actionPlan: "Capacitar al personal",
+                            responsible: "Juan Pérez",
+                            planDate: "2023-10-15",
+                            closingDate: "2023-10-30",
+                            ai: true,
+                            ac: false,
+                            ap: false
+                        },
+                        {
+                            rootCause: "Falta de recursos",
+                            actionPlan: "Adquirir nuevos equipos",
+                            responsible: "Ana Gómez",
+                            planDate: "2023-10-20",
+                            closingDate: "2023-11-05",
+                            ai: false,
+                            ac: true,
+                            ap: false
+                        }
+                    ]
+                };
+
+                // Llenar el formulario con los datos encontrados
+                document.getElementById('complaint-code').value = actionsData.complaintCode;
+                document.getElementById('problem-description').value = actionsData.problemDescription;
+                document.getElementById('line-area').value = actionsData.lineArea;
+                document.getElementById('machine').value = actionsData.machine;
+                document.getElementById('investigator').value = actionsData.investigator;
+                document.getElementById('team-members').value = actionsData.teamMembers;
+                document.getElementById('why-1').value = actionsData.why1;
+                document.getElementById('why-2').value = actionsData.why2;
+                document.getElementById('why-3').value = actionsData.why3;
+                document.getElementById('why-4').value = actionsData.why4;
+                document.getElementById('why-5').value = actionsData.why5;
+                document.getElementById('root-cause').value = actionsData.rootCause;
+
+                // Llenar los planes de acción
+                actionsData.actionPlans.forEach((plan, index) => {
+                    document.getElementById(`root-cause-${index + 1}`).value = plan.rootCause;
+                    document.getElementById(`action-plan-${index + 1}`).value = plan.actionPlan;
+                    document.getElementById(`responsible-${index + 1}`).value = plan.responsible;
+                    document.getElementById(`plan-date-${index + 1}`).value = plan.planDate;
+                    document.getElementById(`closing-date-${index + 1}`).value = plan.closingDate;
+                    document.getElementById(`ai-${index + 1}`).checked = plan.ai;
+                    document.getElementById(`ac-${index + 1}`).checked = plan.ac;
+                    document.getElementById(`ap-${index + 1}`).checked = plan.ap;
+                });
+
+                // Mostrar el formulario de acciones
+                document.getElementById('actions-form').style.display = 'block';
+            } else {
+                alert("Por favor, ingrese un código de reclamo válido.");
+            }
+        }
+
+        // Función para guardar acciones
+        function saveActions() {
+            const complaintCode = document.getElementById('complaint-code').value;
+            const problemDescription = document.getElementById('problem-description').value;
+            const lineArea = document.getElementById('line-area').value;
+            const machine = document.getElementById('machine').value;
+            const investigator = document.getElementById('investigator').value;
+            const teamMembers = document.getElementById('team-members').value;
+            const why1 = document.getElementById('why-1').value;
+            const why2 = document.getElementById('why-2').value;
+            const why3 = document.getElementById('why-3').value;
+            const why4 = document.getElementById('why-4').value;
+            const why5 = document.getElementById('why-5').value;
+            const rootCause = document.getElementById('root-cause').value;
+
+            // Datos de los planes de acción
+            const actionPlans = [
+                {
+                    rootCause: document.getElementById('root-cause-1').value,
+                    actionPlan: document.getElementById('action-plan-1').value,
+                    responsible: document.getElementById('responsible-1').value,
+                    planDate: document.getElementById('plan-date-1').value,
+                    closingDate: document.getElementById('closing-date-1').value,
+                    ai: document.getElementById('ai-1').checked,
+                    ac: document.getElementById('ac-1').checked,
+                    ap: document.getElementById('ap-1').checked
+                },
+                {
+                    rootCause: document.getElementById('root-cause-2').value,
+                    actionPlan: document.getElementById('action-plan-2').value,
+                    responsible: document.getElementById('responsible-2').value,
+                    planDate: document.getElementById('plan-date-2').value,
+                    closingDate: document.getElementById('closing-date-2').value,
+                    ai: document.getElementById('ai-2').checked,
+                    ac: document.getElementById('ac-2').checked,
+                    ap: document.getElementById('ap-2').checked
+                }
+            ];
+
+            // Simulación de guardado en la base de datos
+            const data = {
+                complaintCode,
+                problemDescription,
+                lineArea,
+                machine,
+                investigator,
+                teamMembers,
+                why1,
+                why2,
+                why3,
+                why4,
+                why5,
+                rootCause,
+                actionPlans
+            };
+
+            console.log("Datos guardados:", data);
+            showNotification("Acciones guardadas correctamente.");
+        }
+
+        // Notificación
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Simulación de envío de formulario
+        document.getElementById('complaint-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showNotification('Reclamo enviado correctamente.');
+        });
+    </script>
+</body>
+</html>
