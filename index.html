@@ -412,9 +412,9 @@
                                 <textarea name="descripcionDefecto" rows="3" required></textarea>
                             </div>
                             <div class="form-group full-width">
-                                <label>Documento Adjunto / Attached Document</label>
-                                 <input type="file" name="documentoAdjunto" accept=".pdf,.jpg,.jpeg,.png">
-                            </div>
+    <label>Documento Adjunto / Attached Document</label>
+    <button type="button" onclick="abrirFormularioGoogle()">Subir archivo</button>
+</div>
                         </div>
                         <button type="submit" class="submit-btn">Enviar Reclamo / Submit Complaint</button>
                     </form>
@@ -743,7 +743,20 @@ document.getElementById('complaint-form').addEventListener('submit', function(e)
 });
 
 
+function abrirFormularioGoogle() {
+    // URL de tu formulario de Google Forms
+    const urlFormulario = "https://docs.google.com/forms/d/e/1FAIpQLSdrpCPK_Zdw-ebdGawt5HvOMtzExQ_WsK-2FeZ5LuC-4pcsJw/viewform?usp=header";
 
+    // Abre el formulario en una ventana emergente
+    window.open(
+        urlFormulario,
+        "FormularioGoogle",
+        "width=600,height=800,scrollbars=yes,resizable=yes"
+    );
+}
+
+        
+        
         document.getElementById('mis-reclamos').addEventListener('click', function(e) {
             e.preventDefault();
             hideAllSections();
