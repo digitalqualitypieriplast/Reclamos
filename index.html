@@ -413,8 +413,53 @@
                             </div>
                             <div class="form-group full-width">
     <label>Documento Adjunto / Attached Document</label>
-    <button type="button" onclick="abrirFormularioGoogle()">Subir archivo</button>
+    <input type="file" id="archivo" accept=".pdf,.jpg,.jpeg,.png">
+    <button type="button" onclick="subirArchivo()">Subir archivo a Dropbox</button>
 </div>
+
+<script>
+    // Token de acceso de Dropbox (obtenido desde la consola de desarrolladores)
+    const DROPBOX_TOKEN = "sl.u.AFmvoUITe7obxPm9Oq6EOpsF8eX8JYkWjcOBwkRXZq3Bs1er-3K3vaKlpFVGtaTMP4MqeRXWluBTok50056AZ_fmbhUp4pImK2nqkxx4BObt8Ld6Dh2fKXEz1NI1sptfqNrc05pl7AOhn6n2_rnI26XXKtvpUHZE2Q4xjGS_LbBK_TuxeIbV579FDsPWTgqF12wdpeI8o2kTdm1EN3myQU8OrmNzG7z47mO_6hh_9RFQIYFzxuaTvoYeD1F7NHW5Pc5xkv0ohesoYMr_vSMttJ8fBsF-FSfDPYH_OWkJXJTVfzdg_jVnGeDhsm4hXtVI6CitYIRmD_IthjCKc0E0UmklbxNr3MVF2k3hh8mwxapULxxhgod7rZIpP6D_3jPCWJibFBFwMTE2UnDpRWgRA63tquDxuSeLkGLhwfWQij3qVadOrQKB05iYzHvUrxHEuGXG3EL7xSwHFgFHYGpuB45Al7jmKLjqB9FAJiY78cLkQ18eKtvlzsGSaVp_Yh0C_eBttgDA6T9mELZWixF5cFIeSGq3krsFpIRT_cNta1NHTuQCrtgj0LAOKBrCHAqZJTY9ySgQD7L_iU2UJ0o3S56hA3CUUbSkZyQx6q70kX6GkjDMVMF2TllHPDXDuJHUTgcUuyD2zZKPpvPtHaC8oi7QGd_ZxtL-HH4Vja02b2sY7newUgee1hQ6MtSWS_5e3V3W5uDE5fuN9NkIVpxJpPoNjEXHsnPsAqWLnfDBR4JLRv9sqD1x3xQ7rrpabhr4kmEiUqShVZjHOHdmkm0Uyyv35lyG54L9Ym6DjQRY-_yZCEAAojj454fRMOAyLmPTlqjsYiBf1ThBKhRZehDrMLf5QdSSsvehKXDlYOkE3e8hHfSmwSs6_Z-SeWege0nBsTr9ko7pIa1GqxiVXgZvezv1P6bBjhMUUKVZHAKIqxY6w5ITt-TZhYBo-HUSQda_B7H58tLPJmeKNraAg2XkCUYUYxfeiyyV7Np_73a7uS4-KJO6lxL1vzUH55-eRKSc3G9a6C1tJ0NJay1afhGbeQ4CIyCoLpsrgri8jTnic_dwJL74NKZOKgRdqlyfyox3zgpSfVJMzaqIzOkoNawKVH66u8d8QorpCnuw3W03aw-gFxct502OGF5pFdEdgGYDLls4FAgO-3CYHc9ucfP8Bw_8_nM2K2BmpdToo5sGwT3mYl0dOwidIl_jGyDSTOlVh6pQ8XTwSwNz0FRJXVDFsqS-q8swjNpe7sJD10h1A1GP3s1uoQivoUCiLVvB0gzWM4MjRegMIzvCe-UavzlTsM6FrcTb0n2XFoi8fJCIw_K7w8ljBY598fc3AKtm4mLlfSo-pwO3Ojba5RXHMaL7Zuyut2tdYJ6iKZ3BjMzaSM4A4WXg27yUpBr8UzyvXEiNuJIDkLaTB2dY1T13qjj8K4CxlnI0QYV-wvqrebKmgrjdCw";
+
+    function subirArchivo() {
+        const fileInput = document.getElementById('archivo');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert("Por favor, selecciona un archivo.");
+            return;
+        }
+
+        // Configurar la solicitud a la API de Dropbox
+        const url = "https://content.dropboxapi.com/2/files/upload";
+        const headers = new Headers({
+            "Authorization": `Bearer ${DROPBOX_TOKEN}`,
+            "Content-Type": "application/octet-stream",
+            "Dropbox-API-Arg": JSON.stringify({
+                path: "/" + file.name, // Ruta donde se guardará el archivo en Dropbox
+                mode: "add", // Modo "add" para añadir el archivo
+                autorename: true, // Renombrar automáticamente si ya existe un archivo con el mismo nombre
+                mute: false // No silenciar notificaciones
+            })
+        });
+
+        // Enviar el archivo a Dropbox
+        fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: file
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Archivo subido con éxito:", data);
+            alert("Archivo subido con éxito!");
+        })
+        .catch(error => {
+            console.error("Error al subir el archivo:", error);
+            alert("Error al subir el archivo. Por favor, inténtalo de nuevo.");
+        });
+    }
+</script>
                         </div>
                         <button type="submit" class="submit-btn">Enviar Reclamo / Submit Complaint</button>
                     </form>
